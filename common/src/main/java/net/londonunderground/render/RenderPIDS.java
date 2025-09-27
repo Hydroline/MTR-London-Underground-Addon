@@ -1,6 +1,7 @@
 package net.londonunderground.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import mtr.MTRClient;
 import mtr.block.BlockArrivalProjectorBase;
 import mtr.block.BlockPIDSBaseHorizontal;
@@ -227,16 +228,16 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
 				final Font textRenderer = Minecraft.getInstance().font;
 
 				if (useCustomMessage) {
-					final FormattedCharSequence text4 = Text.literal(destinationString).setStyle(style).getVisualOrderText();
-					final int destinationWidth = textRenderer.width(text4);
+					final int destinationWidth = textRenderer.width(destinationString);
 					if (destinationWidth > totalScaledWidth) {
 						matrices.scale(totalScaledWidth / destinationWidth, 1, 1);
 					}
-					// Use MTR 3.2.2 compatible text rendering
-					final String destinationTextString = text4.toString();
-					IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationTextString,
-						HorizontalAlignment.LEFT, VerticalAlignment.TOP,
-						0, 0, totalScaledWidth, 16, 1.0f, textColor, false, 15, null);
+					// Use MTR 3.2.2 compatible text rendering with proper buffer management
+					final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+					IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, destinationString,
+						HorizontalAlignment.LEFT, VerticalAlignment.CENTER,
+						0, 8, totalScaledWidth, 16, 0.4F, textColor, false, light, null); // 进一步减小到0.4F
+					bufferSource.endBatch();
 				} else {
 					final Component arrivalText;
 					final int seconds = (int) ((currentSchedule.arrivalMillis - System.currentTimeMillis()) / 1000);
@@ -250,30 +251,31 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
 
 
 					if (renderArrivalNumber) {
-						final FormattedCharSequence text1 = Text.literal(String.valueOf(i + 1)).setStyle(style).getVisualOrderText();
-						// Use MTR 3.2.2 compatible text rendering
-						final String arrivalNumberString = text1.toString();
-						IDrawing.drawStringWithFont(matrices, textRenderer, null, arrivalNumberString,
-							HorizontalAlignment.LEFT, VerticalAlignment.TOP,
-							0, 0, 50, 16, 1.0f, seconds > 0 ? textColor : firstTrainColor, false, 15, null);
+						// Use MTR 3.2.2 compatible text rendering with proper buffer management
+						final String arrivalNumberString = String.valueOf(i + 1);
+						final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+						IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, arrivalNumberString,
+							HorizontalAlignment.LEFT, VerticalAlignment.CENTER,
+							0, 8, destinationStart, 16, 0.4F, seconds > 0 ? textColor : firstTrainColor, false, light, null); // 进一步减小到0.4F
+						bufferSource.endBatch();
 					}
 
 					final float newDestinationMaxWidth = destinationMaxWidth - carLengthMaxWidth;
 
 					if (showCarLength) {
-						final FormattedCharSequence text3 = Text.literal(carText.getString()).setStyle(style).getVisualOrderText();
-
 						matrices.pushPose();
 						matrices.translate(destinationStart + newDestinationMaxWidth + platformMaxWidth, 0, 0);
-						final int carTextWidth = textRenderer.width(text3);
+						final String carTextString = carText.getString();
+						final int carTextWidth = textRenderer.width(carTextString);
 						if (carTextWidth > carLengthMaxWidth) {
 							matrices.scale(carLengthMaxWidth / carTextWidth, 1, 1);
 						}
-						// Use MTR 3.2.2 compatible text rendering
-						final String carTextString = text3.toString();
-						IDrawing.drawStringWithFont(matrices, textRenderer, null, carTextString,
-							HorizontalAlignment.LEFT, VerticalAlignment.TOP,
-							0, 0, carLengthMaxWidth, 16, 1.0f, CAR_TEXT_COLOR, false, 15, null);
+						// Use MTR 3.2.2 compatible text rendering with proper buffer management
+						final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+						IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, carTextString,
+							HorizontalAlignment.LEFT, VerticalAlignment.CENTER,
+							0, 8, carLengthMaxWidth, 16, 0.4F, CAR_TEXT_COLOR, false, light, null); // 进一步减小到0.4F
+						bufferSource.endBatch();
 						matrices.popPose();
 					}
 
@@ -288,39 +290,38 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
 						destinationString2 = destinationString;
 					}
 
-					final FormattedCharSequence text4 = Text.literal(destinationString2).setStyle(style).getVisualOrderText();
-
 					matrices.pushPose();
 					matrices.translate(destinationStart, 0, 0);
-					final int destinationWidth = textRenderer.width(text4);
+					final int destinationWidth = textRenderer.width(destinationString2);
 					if (destinationWidth > newDestinationMaxWidth) {
 						matrices.scale(newDestinationMaxWidth / destinationWidth, 1, 1);
 					}
 
-					// Use MTR 3.2.2 compatible text rendering
-					final String destinationTextString = text4.toString();
-					IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationTextString,
-						HorizontalAlignment.LEFT, VerticalAlignment.TOP,
-						0, 0, newDestinationMaxWidth, 16, 1.0f, seconds > 0 ? textColor : firstTrainColor, false, 15, null);
+					// Use MTR 3.2.2 compatible text rendering with proper buffer management
+					final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+					IDrawing.drawStringWithFont(matrices, textRenderer, bufferSource, destinationString2,
+						HorizontalAlignment.LEFT, VerticalAlignment.CENTER,
+						0, 8, newDestinationMaxWidth, 16, 0.4F, seconds > 0 ? textColor : firstTrainColor, false, light, null); // 进一步减小到0.4F
+					bufferSource.endBatch();
 					matrices.popPose();
 
 					if (arrivalText != null) {
-						final FormattedCharSequence text5 = Text.literal(arrivalText.getString()).setStyle(style).getVisualOrderText();
-
+						final String arrivalTextString = arrivalText.getString();
 
 						matrices.pushPose();
-						final int arrivalWidth = textRenderer.width(text5);
+						final int arrivalWidth = textRenderer.width(arrivalTextString);
 						if (arrivalWidth > arrivalMaxWidth) {
 							matrices.translate(destinationStart + newDestinationMaxWidth + platformMaxWidth + carLengthMaxWidth, 0, 0);
 							matrices.scale(arrivalMaxWidth / arrivalWidth, 1, 1);
 						} else {
 							matrices.translate(totalScaledWidth - arrivalWidth, 0, 0);
 						}
-						// Use MTR 3.2.2 compatible text rendering
-						final String arrivalTextString = text5.toString();
-						IDrawing.drawStringWithFont(matrices, textRenderer, null, arrivalTextString,
-							HorizontalAlignment.LEFT, VerticalAlignment.TOP,
-							0, 0, arrivalMaxWidth, 16, 1.0f, textColor, false, 15, null);
+						// Use MTR 3.2.2 compatible text rendering with proper buffer management
+						final MultiBufferSource.BufferSource arrivalBufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+						IDrawing.drawStringWithFont(matrices, textRenderer, arrivalBufferSource, arrivalTextString,
+							HorizontalAlignment.LEFT, VerticalAlignment.CENTER,
+							0, 8, arrivalMaxWidth, 16, 0.4F, textColor, false, light, null); // 进一步减小到0.4F
+						arrivalBufferSource.endBatch();
 						matrices.popPose();
 					}
 				}

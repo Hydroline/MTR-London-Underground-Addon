@@ -90,7 +90,7 @@ public class RenderNameProjector<T extends BlockRoundelBase.TileEntityBlockRound
 		}
 
 		final Station station = RailwayData.getStation(ClientData.STATIONS, ClientData.DATA_CACHE, pos);
-		final FormattedCharSequence roundelText = Text.literal(IGui.textOrUntitled(IGui.formatStationName(station == null ? "" : station.name)).toUpperCase(Locale.ROOT)).setStyle(STYLE).getVisualOrderText();
+		final String roundelText = IGui.textOrUntitled(IGui.formatStationName(station == null ? "" : station.name)).toUpperCase(Locale.ROOT);
 		final int textWidth = Minecraft.getInstance().font.width(roundelText);
 
 		matrices.pushPose();
@@ -107,20 +107,21 @@ public class RenderNameProjector<T extends BlockRoundelBase.TileEntityBlockRound
 		matrices.popPose();
 	}
 
-	private void render(PoseStack matrices, MultiBufferSource.BufferSource immediate, FormattedCharSequence roundelText, int textWidth, int color, int light) {
+	private void render(PoseStack matrices, MultiBufferSource.BufferSource immediate, String roundelText, int textWidth, int color, int light) {
 		matrices.pushPose();
 		UtilitiesClient.rotateXDegrees(matrices, xTilt);
 		matrices.translate(-xOffset, -yOffset, -zOffset - SMALL_OFFSET * 2);
 
-		final float scale = Math.min((maxWidth) / textWidth, maxScale);
+		final float scale = Math.min((maxWidth) / textWidth, maxScale * 0.7f); // 减小字体大小到原来的70%
 		matrices.scale(scale, scale, scale);
-		matrices.translate(0, -3.5, 0);
+		matrices.translate(0, 0.5, 0); // 调整垂直位置到正数，让文字真正居中在蓝色横条中
 
-		// Use MTR 3.2.2 compatible text rendering
-		final String text = roundelText.toString();
-		IDrawing.drawStringWithFont(matrices, Minecraft.getInstance().font, null, text,
+		// Use MTR 3.2.2 compatible text rendering with proper buffer management
+		final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+		IDrawing.drawStringWithFont(matrices, Minecraft.getInstance().font, bufferSource, roundelText,
 			HorizontalAlignment.CENTER, VerticalAlignment.CENTER,
 			-textWidth / 2F, 0, textWidth, 16, scale, textColor, false, light, null);
+		bufferSource.endBatch();
 
 		matrices.popPose();
 	}
