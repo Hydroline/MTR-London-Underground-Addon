@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[36,)"
+loaderVersion = "[47,)"
 license = "MIT"
 
 [[mods]]
@@ -13,21 +13,21 @@ logoFile = "icon.png"
 [[dependencies.londonunderground]]
 modId = "forge"
 mandatory = true
-versionRange = "[36,)"
+versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.londonunderground]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.16.5,)"
+versionRange = "[1.20.1,1.20.2)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.londonunderground]]
 modId = "architectury"
 mandatory = true
-versionRange = "[1.26.37,)"
+versionRange = "[9.0.0,)"
 ordering = "AFTER"
 side = "BOTH"
 

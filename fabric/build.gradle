@@ -16,11 +16,12 @@ configurations {
 }
 
 dependencies {
-	modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-	modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version[1]}"
+    modApi "com.terraformersmc:modmenu:${rootProject.mod_menu_data[0]}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_data[0]}"
 
-	common(project(path: ":common", configuration: "namedElements")) { transitive false }
-	shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }
 
 processResources {
@@ -32,14 +33,16 @@ processResources {
 }
 
 shadowJar {
-	configurations = [project.configurations.shadowCommon]
-	classifier "dev-shadow"
+    exclude "architectury.common.json"
+
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = "dev-shadow"
 }
 
 remapJar {
-	input.set shadowJar.archiveFile
-	dependsOn shadowJar
-	classifier null
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier = null
 }
 
 components.java {

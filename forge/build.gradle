@@ -22,11 +22,11 @@ configurations {
 }
 
 dependencies {
-	forge "net.minecraftforge:forge:${rootProject.forge_version}"
-	modApi "${rootProject.architectury_id}:architectury-forge:${rootProject.architectury_version}"
+    forge "net.minecraftforge:forge:${rootProject.forge_version}"
+    modApi "${rootProject.architectury_id}:architectury-forge:${rootProject.architectury_data[0].split("\\+")[0]}"
 
-	common(project(path: ":common", configuration: "namedElements")) { transitive false }
-	shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }
 
 processResources {
@@ -38,16 +38,17 @@ processResources {
 }
 
 shadowJar {
-	exclude "fabric.mod.json"
+    exclude "fabric.mod.json"
+    exclude "architectury.common.json"
 
-	configurations = [project.configurations.shadowCommon]
-	classifier "dev-shadow"
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = "dev-shadow"
 }
 
 remapJar {
-	input.set shadowJar.archiveFile
-	dependsOn shadowJar
-	classifier null
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier = null
 }
 
 components.java {

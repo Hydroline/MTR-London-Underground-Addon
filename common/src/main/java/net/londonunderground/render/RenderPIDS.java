@@ -7,7 +7,10 @@ import mtr.block.BlockPIDSBaseHorizontal;
 import mtr.block.IBlock;
 import mtr.client.ClientData;
 import mtr.client.Config;
+import mtr.client.IDrawing;
 import mtr.data.*;
+import mtr.data.IGui.HorizontalAlignment;
+import mtr.data.IGui.VerticalAlignment;
 import mtr.mappings.BlockEntityMapper;
 import mtr.mappings.BlockEntityRendererMapper;
 import mtr.mappings.Text;
@@ -30,7 +33,7 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 
 import java.util.*;
 
-public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRendererMapper<T> implements IGui, IGui2 {
+public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRendererMapper<T> implements IGui, IGui2, IDrawing {
 
 	private final float scale;
 	private final float totalScaledWidth;
@@ -229,7 +232,11 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
 					if (destinationWidth > totalScaledWidth) {
 						matrices.scale(totalScaledWidth / destinationWidth, 1, 1);
 					}
-					textRenderer.draw(matrices, text4, 0, 0, textColor);
+					// Use MTR 3.2.2 compatible text rendering
+					final String destinationTextString = text4.toString();
+					IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationTextString,
+						HorizontalAlignment.LEFT, VerticalAlignment.TOP,
+						0, 0, totalScaledWidth, 16, 1.0f, textColor, false, 15, null);
 				} else {
 					final Component arrivalText;
 					final int seconds = (int) ((currentSchedule.arrivalMillis - System.currentTimeMillis()) / 1000);
@@ -244,7 +251,11 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
 
 					if (renderArrivalNumber) {
 						final FormattedCharSequence text1 = Text.literal(String.valueOf(i + 1)).setStyle(style).getVisualOrderText();
-						textRenderer.draw(matrices, text1, 0, 0, seconds > 0 ? textColor : firstTrainColor);
+						// Use MTR 3.2.2 compatible text rendering
+						final String arrivalNumberString = text1.toString();
+						IDrawing.drawStringWithFont(matrices, textRenderer, null, arrivalNumberString,
+							HorizontalAlignment.LEFT, VerticalAlignment.TOP,
+							0, 0, 50, 16, 1.0f, seconds > 0 ? textColor : firstTrainColor, false, 15, null);
 					}
 
 					final float newDestinationMaxWidth = destinationMaxWidth - carLengthMaxWidth;
@@ -258,7 +269,11 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
 						if (carTextWidth > carLengthMaxWidth) {
 							matrices.scale(carLengthMaxWidth / carTextWidth, 1, 1);
 						}
-						textRenderer.draw(matrices, text3, 0, 0, CAR_TEXT_COLOR);
+						// Use MTR 3.2.2 compatible text rendering
+						final String carTextString = text3.toString();
+						IDrawing.drawStringWithFont(matrices, textRenderer, null, carTextString,
+							HorizontalAlignment.LEFT, VerticalAlignment.TOP,
+							0, 0, carLengthMaxWidth, 16, 1.0f, CAR_TEXT_COLOR, false, 15, null);
 						matrices.popPose();
 					}
 
@@ -282,7 +297,11 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
 						matrices.scale(newDestinationMaxWidth / destinationWidth, 1, 1);
 					}
 
-					textRenderer.draw(matrices, text4, 0, 0, seconds > 0 ? textColor : firstTrainColor);
+					// Use MTR 3.2.2 compatible text rendering
+					final String destinationTextString = text4.toString();
+					IDrawing.drawStringWithFont(matrices, textRenderer, null, destinationTextString,
+						HorizontalAlignment.LEFT, VerticalAlignment.TOP,
+						0, 0, newDestinationMaxWidth, 16, 1.0f, seconds > 0 ? textColor : firstTrainColor, false, 15, null);
 					matrices.popPose();
 
 					if (arrivalText != null) {
@@ -297,7 +316,11 @@ public class RenderPIDS<T extends BlockEntityMapper> extends BlockEntityRenderer
 						} else {
 							matrices.translate(totalScaledWidth - arrivalWidth, 0, 0);
 						}
-						textRenderer.draw(matrices, text5, 0, 0, textColor);
+						// Use MTR 3.2.2 compatible text rendering
+						final String arrivalTextString = text5.toString();
+						IDrawing.drawStringWithFont(matrices, textRenderer, null, arrivalTextString,
+							HorizontalAlignment.LEFT, VerticalAlignment.TOP,
+							0, 0, arrivalMaxWidth, 16, 1.0f, textColor, false, 15, null);
 						matrices.popPose();
 					}
 				}
