@@ -66,7 +66,7 @@ subprojects {
 
 tasks.register('setupLibrary') {
     doLast {
-        String baseURL = "https://www.minecrafttransitrailway.com/libs/"
+        String baseURL = is_1_20_1 ? "https://storage.zbx1425.cn/mtr-artifacts/libs/" : "https://www.minecrafttransitrailway.com/libs/"
 
         // Only download if files don't exist or are older than 1 day
         def commonJar = file("checkouts/mtr-common.jar")
@@ -77,7 +77,7 @@ tasks.register('setupLibrary') {
 
         if (!commonJar.exists() || (now - commonJar.lastModified()) > cacheTime) {
             download.run {
-                src "${baseURL}${rootProject.mtr_version}/MTR-common-${minecraft_version}-${rootProject.mtr_version}-dev.jar"
+                src "${baseURL}latest/MTR-common-${minecraft_version}-latest-dev.jar"
                 dest "checkouts/mtr-common.jar"
                 overwrite true
             }
@@ -87,7 +87,7 @@ tasks.register('setupLibrary') {
 
         if (!fabricJar.exists() || (now - fabricJar.lastModified()) > cacheTime) {
             download.run {
-                src "${baseURL}${rootProject.mtr_version}/MTR-fabric-${minecraft_version}-${rootProject.mtr_version}-dev-shadow.jar"
+                src "${baseURL}latest/MTR-fabric-${minecraft_version}-latest-dev-shadow.jar"
                 dest "checkouts/mtr-fabric.jar"
                 overwrite true
             }
@@ -97,7 +97,7 @@ tasks.register('setupLibrary') {
 
         if (!forgeJar.exists() || (now - forgeJar.lastModified()) > cacheTime) {
             download.run {
-                src "${baseURL}${rootProject.mtr_version}/MTR-forge-${minecraft_version}-${rootProject.mtr_version}-dev-shadow.jar"
+                src "${baseURL}latest/MTR-forge-${minecraft_version}-latest-dev-shadow.jar"
                 dest "checkouts/mtr-forge.jar"
                 overwrite true
             }
