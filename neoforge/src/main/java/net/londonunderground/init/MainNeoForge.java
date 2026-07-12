@@ -4,6 +4,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.londonunderground.registry.LUBlockEntities;
 import net.londonunderground.registry.LUBlocks;
+import net.londonunderground.registry.LUCreativeTabs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ public class MainNeoForge {
 	public MainNeoForge(IEventBus modEventBus) {
 		LUBlocks.register(modEventBus);
 		LUBlockEntities.register(modEventBus);
+		LUCreativeTabs.register(modEventBus);
 		LOGGER.info("MTR London Underground Addon NeoForge blocks registered");
 	}
 }

@@ -1,9 +1,5 @@
 package net.londonunderground.registry;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import net.londonunderground.block.MordenSignBlock;
 import net.londonunderground.block.MordenSignDlrBlock;
 import net.londonunderground.block.MordenSignOvergroundBlock;
@@ -35,6 +31,10 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.mtr.block.BlockPIDSPole;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public final class LUBlocks {
 
@@ -135,6 +135,25 @@ public final class LUBlocks {
 		BLOCK_ITEMS.values().forEach(item -> consumer.accept(item.get()));
 	}
 
+	public static void addBlocksTabItems(Consumer<Item> consumer) {
+		consumer.accept(PIDS_NORTHERN.asItem());
+		consumer.accept(PIDS_POLE.asItem());
+		consumer.accept(NAME_PROJECTOR.asItem());
+	}
+
+	public static void addStationTabItems(Consumer<Item> consumer) {
+		consumer.accept(TUNNEL_A2_SIGNAL.asItem());
+		consumer.accept(TUNNEL_BLOCK_2_SIGNAL.asItem());
+	}
+
+	public static void addSignsTabItems(Consumer<Item> consumer) {
+		BLOCK_ITEMS.forEach((name, item) -> {
+			if (!isBlocksTabItem(name) && !isStationTabItem(name)) {
+				consumer.accept(item.get());
+			}
+		});
+	}
+
 	private static DeferredBlock<Block> register(String name, Supplier<? extends Block> supplier) {
 		final DeferredBlock<Block> block = BLOCKS.register(name, supplier);
 		BLOCK_ITEMS.put(name, ITEMS.registerSimpleBlockItem(name, block));
@@ -143,5 +162,13 @@ public final class LUBlocks {
 
 	private static BlockBehaviour.Properties baseProperties() {
 		return BlockBehaviour.Properties.of().strength(2.0F).sound(SoundType.METAL);
+	}
+
+	private static boolean isBlocksTabItem(String name) {
+		return "pids_northern".equals(name) || "pids_pole".equals(name) || "name_projector".equals(name);
+	}
+
+	private static boolean isStationTabItem(String name) {
+		return "tunnel_a2_signal".equals(name) || "tunnel_block_2_signal".equals(name);
 	}
 }
