@@ -1,0 +1,32 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+
+[[mods]]
+modId = "londonunderground"
+version = "${mod_version}"
+displayName = "MTR London Underground Addon"
+authors = "t1NbLu3"
+description = "A London Underground Addon for the Minecraft Transit Railway Mod"
+logoFile = "icon.png"
+
+[[dependencies.londonunderground]]
+modId = "neoforge"
+type = "required"
+versionRange = "[${neoforge_min_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.londonunderground]]
+modId = "minecraft"
+type = "required"
+versionRange = "[${minecraft_version}]"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.londonunderground]]
+modId = "mtr"
+type = "required"
+versionRange = "[${mtr_version},)"
+ordering = "AFTER"
+side = "BOTH"

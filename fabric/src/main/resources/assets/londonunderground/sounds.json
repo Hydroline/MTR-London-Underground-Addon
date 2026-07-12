@@ -51,21 +51,21 @@
   "sw_chx_highb": {
     "sounds": [
       {
-        "name": "londonunderground:northernline/sw_chx_highb"
+        "name": "londonunderground:sw_ew_bank"
       }
     ]
   },
   "arrival": {
     "sounds": [
       {
-        "name": "londonunderground:northernline/arrival"
+        "name": "londonunderground:arrive95"
       }
     ]
   },
   "next_southwimbledon": {
     "sounds": [
       {
-        "name": "londonunderground:northernline/next_southwimbledon"
+        "name": "londonunderground:approach_test"
       }
     ]
   },
