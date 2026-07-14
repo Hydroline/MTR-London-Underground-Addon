@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -65,7 +66,7 @@ public class RenderRoundel<T extends BlockEntity> extends BlockEntityRendererExt
 
 		for (int side = 0; side < renderCount; side++) {
 			poseStack.pushPose();
-			poseStack.translate(0.5D, 0.5D, 0.5D);
+			poseStack.translate(0, 0.5D, 0);
 			poseStack.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
 			poseStack.mulPose(Axis.ZP.rotationDegrees(180));
 			if (side == 1) {
@@ -73,8 +74,8 @@ public class RenderRoundel<T extends BlockEntity> extends BlockEntityRendererExt
 			}
 			poseStack.mulPose(Axis.XP.rotationDegrees(xTilt));
 			poseStack.translate(-xOffset, -yOffset, -zOffset - SMALL_OFFSET * 2);
-			poseStack.scale(-scale, -scale, scale);
-			font.drawInBatch(text, -textWidth / 2F, -3.5F, textColor, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, packedLight);
+			poseStack.scale(scale, scale, scale);
+			font.drawInBatch(text, -textWidth / 2F, -3.5F, textColor, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.SEE_THROUGH, 0, LightTexture.FULL_BRIGHT);
 			poseStack.popPose();
 		}
 	}

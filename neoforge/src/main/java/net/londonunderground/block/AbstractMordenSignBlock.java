@@ -40,7 +40,7 @@ public abstract class AbstractMordenSignBlock extends Block implements EntityBlo
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+		return defaultBlockState().setValue(FACING, context.getHorizontalDirection());
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public abstract class AbstractMordenSignBlock extends Block implements EntityBlo
 
 	@Override
 	protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-		return Shapes.empty();
+		return getShape(state, level, pos, context);
 	}
 
 	@Override
